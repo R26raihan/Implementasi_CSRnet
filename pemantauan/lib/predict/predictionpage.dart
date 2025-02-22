@@ -11,14 +11,15 @@ class PredictionPage extends StatefulWidget {
 }
 
 class _PredictionPageState extends State<PredictionPage> {
-  Map<String, int> predictions = {'DPR': 0, 'Bundaran HI': 0, 'Monas': 0};
+  Map<String, int> predictions = {'DPR': 0, 'Bundaran HI': 0, 'Monas': 0, 'Patung Kuda': 0, };
   Timer? _timer;
   bool _isLoading = false;
 
   final Map<String, LatLng> locations = {
     'Monas': LatLng(-6.175392, 106.827153),
-    'DPR': LatLng(-6.1764,  106.7959),
+    'DPR': LatLng(-6.208850173927415,  106.79959567661034),
     'Bundaran HI': LatLng(-6.193667, 106.823024),
+    'Patung Kuda': LatLng(-6.179948845136005, 106.82279130325084), 
   };
 
   @override
@@ -45,13 +46,14 @@ class _PredictionPageState extends State<PredictionPage> {
       _isLoading = true;
     });
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.8:8000/get_predictions'));
+      final response = await http.get(Uri.parse('http://192.168.1.6:8000/get_predictions'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
           predictions['DPR'] = data['DPR']['predicted_count'] ?? 0;
           predictions['Bundaran HI'] = data['Bundaran HI']['predicted_count'] ?? 0;
           predictions['Monas'] = data['Monas']['predicted_count'] ?? 0;
+          predictions['Patung Kuda'] = data['Patung Kuda']['predicted_count'] ?? 0;
         });
       } else {
         print('Failed to fetch predictions');
@@ -197,6 +199,9 @@ class _PredictionPageState extends State<PredictionPage> {
                     SizedBox(height: 8),
                     // Informasi DPR
                     _buildLocationInfo('DPR', predictions['DPR'] ?? 0),
+                    SizedBox(height: 8),
+                    // Informasi DPR
+                    _buildLocationInfo('Patung Kuda', predictions['Patung Kuda'] ?? 0),
                   ],
                 ),
               ),

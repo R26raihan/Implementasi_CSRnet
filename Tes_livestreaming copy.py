@@ -55,7 +55,7 @@ while True:
     frame = cv2.imread('screenshot.png')
 
     # Memotong bagian video dari frame (sesuaikan koordinatnya)
-    frame = frame[300:820, 200:880]  
+    frame = frame[100:820, 200:880]  
 
     if frame is None:
         print("Tidak dapat membaca frame. Mungkin CCTV tidak tersedia atau video telah selesai.")
@@ -106,7 +106,16 @@ while True:
     # Resize heatmap agar sesuai dengan dimensi frame
     heatmap_colored = cv2.resize(heatmap_colored, (frame.shape[1], frame.shape[0]))
 
-    # Kombinasikan frame dengan heatmap
+    # Ambil koordinat titik dengan kepadatan tinggi dari heatmap
+    coordinates = np.column_stack(np.where(mask > 0))
+
+    # Gambar titik-titik kepadatan tinggi di frame asli
+    for (y, x) in coordinates:
+        cv2.circle(frame, (x * frame.shape[1] // heatmap.shape[1], 
+                            y * frame.shape[0] // heatmap.shape[0]), 
+                   3, (0, 0, 255), -1)  # Titik warna merah
+
+    # Gabungkan frame dengan heatmap
     combined = cv2.addWeighted(frame, 0.6, heatmap_colored, 0.4, 0)
 
     # Menampilkan hasil
