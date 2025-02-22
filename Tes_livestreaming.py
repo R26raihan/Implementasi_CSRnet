@@ -37,7 +37,7 @@ driver_service = Service(chrome_driver_path)
 driver = webdriver.Chrome(service=driver_service)
 
 # URL CCTV Stream
-cctv_url = "https://cctv.balitower.co.id/Gelora-017-700470_2/embed.html"  # Ganti dengan URL CCTV Anda
+cctv_url = "https://cctv.balitower.co.id/JPO-Merdeka-Barat-507357_9/embed.html"  # Ganti dengan URL CCTV Anda
 driver.get(cctv_url)
 
 # Tunggu beberapa detik untuk memastikan video dimuat
@@ -55,7 +55,7 @@ while True:
     frame = cv2.imread('screenshot.png')
 
     # Memotong bagian video dari frame (sesuaikan koordinatnya)
-    frame = frame[100:820, 200:880]  
+    frame = frame[300:820, 200:880]  
 
     if frame is None:
         print("Tidak dapat membaca frame. Mungkin CCTV tidak tersedia atau video telah selesai.")

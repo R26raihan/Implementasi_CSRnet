@@ -27,10 +27,12 @@ model.eval()
 
 # Daftar URL CCTV
 cctv_urls = {
-    "Monas": "https://cctv.balitower.co.id/Monas-Barat-009-506632_2/embed.html",
-    "Bundaran_HI": "https://cctv.balitower.co.id/Menteng-001-700123_5/embed.html",
     "DPR": "https://cctv.balitower.co.id/Bendungan-Hilir-003-700014_1/embed.html",
+    "Bundaran HI": "https://cctv.balitower.co.id/Menteng-001-700123_5/embed.html",
+    "Monas": "https://cctv.balitower.co.id/Monas-Barat-009-506632_2/embed.html",
+    "Patung Kuda": "https://cctv.balitower.co.id/JPO-Merdeka-Barat-507357_9/embed.html",
 }
+
 
 # Inisialisasi ChromeDriver untuk setiap CCTV
 chrome_driver_path = "E:\CrowdCounting-using-CRSNet-main\chromedriver-win64\chromedriver.exe"
@@ -81,12 +83,9 @@ def capture_and_predict(location, url):
 for location, url in cctv_urls.items():
     threading.Thread(target=capture_and_predict, args=(location, url), daemon=True).start()
 
-@app.get("/get_prediction/{location}")
-def get_prediction(location: str):
-    if location in latest_predictions:
-        return JSONResponse(content=latest_predictions[location])
-    else:
-        return JSONResponse(content={"error": "Location not found"}, status_code=404)
+@app.get("/get_predictions")
+def get_predictions():
+    return JSONResponse(content=latest_predictions)
 
 if __name__ == "__main__":
     import uvicorn
