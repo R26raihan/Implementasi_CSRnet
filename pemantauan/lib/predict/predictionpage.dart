@@ -11,7 +11,7 @@ class PredictionPage extends StatefulWidget {
 }
 
 class _PredictionPageState extends State<PredictionPage> {
-  Map<String, int> predictions = {'DPR': 0, 'Bundaran HI': 0, 'Monas': 0, 'Patung Kuda': 0, };
+  Map<String, int> predictions = {'DPR': 0, 'Bundaran HI': 0, 'Monas': 0, 'Patung Kuda': 0,'Pospol Istana Negara':0, };
   Timer? _timer;
   bool _isLoading = false;
 
@@ -20,6 +20,7 @@ class _PredictionPageState extends State<PredictionPage> {
     'DPR': LatLng(-6.208850173927415,  106.79959567661034),
     'Bundaran HI': LatLng(-6.193667, 106.823024),
     'Patung Kuda': LatLng(-6.179948845136005, 106.82279130325084), 
+    'Pospol Istana Negara':LatLng(-6.167737356665106, 106.82403961997375), 
   };
 
   @override
@@ -46,7 +47,7 @@ class _PredictionPageState extends State<PredictionPage> {
       _isLoading = true;
     });
     try {
-      final response = await http.get(Uri.parse('http://192.168.1.6:8000/get_predictions'));
+      final response = await http.get(Uri.parse('http://192.168.246.133:8000/get_predictions'));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
@@ -54,6 +55,8 @@ class _PredictionPageState extends State<PredictionPage> {
           predictions['Bundaran HI'] = data['Bundaran HI']['predicted_count'] ?? 0;
           predictions['Monas'] = data['Monas']['predicted_count'] ?? 0;
           predictions['Patung Kuda'] = data['Patung Kuda']['predicted_count'] ?? 0;
+          predictions['Pospol Istana Negara'] = data['Pospol Istana Negara']['predicted_count'] ?? 0;
+          
         });
       } else {
         print('Failed to fetch predictions');
@@ -69,9 +72,9 @@ class _PredictionPageState extends State<PredictionPage> {
 
   // Fungsi untuk menentukan warna berdasarkan level kerumunan
   Color _getColorByCrowdLevel(int crowd) {
-    if (crowd <= 500) {
+    if (crowd <= 50) {
       return Colors.green; // Tidak ada kerumunan
-    } else if (crowd <= 1500) {
+    } else if (crowd <= 100) {
       return Colors.orange; // Potensi kerumunan
     } else {
       return Colors.red; // Kerumunan padat
@@ -202,6 +205,9 @@ class _PredictionPageState extends State<PredictionPage> {
                     SizedBox(height: 8),
                     // Informasi DPR
                     _buildLocationInfo('Patung Kuda', predictions['Patung Kuda'] ?? 0),
+                    SizedBox(height: 8),
+                    // Informasi DPR
+                    _buildLocationInfo('Pospol Istana Negara', predictions['Pospol Istana Negara'] ?? 0),
                   ],
                 ),
               ),

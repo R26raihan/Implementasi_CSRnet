@@ -37,7 +37,7 @@ driver_service = Service(chrome_driver_path)
 driver = webdriver.Chrome(service=driver_service)
 
 # URL CCTV Stream
-cctv_url = "https://cctv.balitower.co.id/JPO-Merdeka-Barat-507357_9/embed.html"  # Ganti dengan URL CCTV Anda
+cctv_url = "https://cctv.balitower.co.id/Bendungan-Hilir-003-700014_1/embed.html"  # Ganti dengan URL CCTV Anda
 driver.get(cctv_url)
 
 # Tunggu beberapa detik untuk memastikan video dimuat
@@ -53,9 +53,6 @@ while True:
 
     # Membaca screenshot dengan OpenCV
     frame = cv2.imread('screenshot.png')
-
-    # Memotong bagian video dari frame (sesuaikan koordinatnya)
-    frame = frame[100:820, 200:880]  
 
     if frame is None:
         print("Tidak dapat membaca frame. Mungkin CCTV tidak tersedia atau video telah selesai.")
@@ -101,19 +98,10 @@ while True:
 
     # Terapkan masking ke heatmap
     heatmap_colored = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-    heatmap_colored[mask == 0] = 0  # Hanya menampilkan heatmap di area yang memiliki kepadatan tinggi
+    heatmap_colored[mask == 0] = [255, 0, 0]  # Ganti area dengan kepadatan rendah dengan warna biru
 
     # Resize heatmap agar sesuai dengan dimensi frame
     heatmap_colored = cv2.resize(heatmap_colored, (frame.shape[1], frame.shape[0]))
-
-    # Ambil koordinat titik dengan kepadatan tinggi dari heatmap
-    coordinates = np.column_stack(np.where(mask > 0))
-
-    # Gambar titik-titik kepadatan tinggi di frame asli
-    for (y, x) in coordinates:
-        cv2.circle(frame, (x * frame.shape[1] // heatmap.shape[1], 
-                            y * frame.shape[0] // heatmap.shape[0]), 
-                   3, (0, 0, 255), -1)  # Titik warna merah
 
     # Gabungkan frame dengan heatmap
     combined = cv2.addWeighted(frame, 0.6, heatmap_colored, 0.4, 0)
